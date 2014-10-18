@@ -14,7 +14,6 @@ using namespace std;
 int parse(char userinput[], char **argv)
 {
 	   
-	cout << "input length " << strlen(userinput) <<endl;
 	int numargs=0;
     	unsigned int i = 0; 
 	while(i < strlen(userinput)){
@@ -25,8 +24,6 @@ int parse(char userinput[], char **argv)
 		i++;
 	}
 
-	cout << "input length " << strlen(userinput) <<endl;
-	cout << "numargs " << numargs << endl; 
 	argv[numargs] = strtok(userinput," \t\n");
 		
     	while(argv[numargs] != NULL){
@@ -59,7 +56,10 @@ int parse(char userinput[], char **argv)
         	numargs++;
 		argv[numargs] = strtok(NULL, " \t\n");
     	}
-	cout << "numargs " << numargs<< endl;
+	cout << "arguments " << endl;
+	for (int i = 0 ; i < numargs; i ++){
+		cout << argv[i] << endl;
+	}
     	return numargs;
 }
 /*
@@ -82,7 +82,7 @@ bool background(int numargs, char** argv, bool emptyinput){
     	return backgroundProc;
 }
 */
-void excute(char** argv, bool backgroundProc){
+void excute(char** argv){
 	int pid = fork();
 	if(pid == -1){
 		perror("there was an error with fork().");
@@ -107,22 +107,27 @@ int main(){
 		char input[1024];
 		cin.getline(input,1024);
 		if(!strcmp(input, "exit")) exit(1);
-
+		bool varAnd = false;
+		if(strcmp(input, "&&")) varAnd=true;
+		bool varOr = false;
+		if(strcmp(input, "||")) varOr = true;
+		bool varSem = false;
+		if(strcmp(input, ";")) varSem = true;
 		char ** argv;
 		argv = new char *[50];
 
 //		bool emptyInput = false;
 //		if(!strcmp(input, "")) emptyInput = true;
 
-		parse(input, argv);
-		cout << "after parse " << endl;	
-		bool backgroundProc = false;
+		int i =	parse(input, argv);
+		
+		int j = 0;
+		
+		
+//		bool backgroundProc = false;
 //		backgroundProc = background (i, argv, emptyInput);
-//		cout << "after background " << endl; 
-		excute(argv, backgroundProc);
-		cout << "before delete[] argv" << endl;
+		excute(argv);
 		delete[] argv;
-		cout << "after delete [] argv" << endl;
 	}
 	return 0;
 }
