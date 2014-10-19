@@ -11,26 +11,30 @@
 
 using namespace std;
 
-void excute(char** argv){
-         int pid = fork();
-         if(pid == -1){
+int excute(char** argv){
+	
+	int status;
+        int pid = fork();
+         
+	if(pid == -1){
                  perror("there was an error with fork().");
          }
          else if (pid == 0){
                  if(execvp(argv[0], argv) == -1){
                          perror("there was an error with execvp.");
                  }
-                 exit(1);
+                 exit(errno);
          }
-         else if (pid > 0){
-                 if(-1 == wait(0)){
-                         perror("there was an error with wait().");
-                 }
+        
+	 else if (pid > 0){
+		wait(&status);
+		return status;
          }
+	return status;
  }
 
 int parse(char userinput[], char **argv){
-	   
+	int stat;   
 	int numargs=0;
     	unsigned int i = 0; 
 	while(i < strlen(userinput)){
@@ -46,19 +50,30 @@ int parse(char userinput[], char **argv){
 	while(argv[numargs] != NULL){
 		if(strcmp(argv[numargs], ";")==0){
 			argv[numargs] = NULL ;
-			excute(argv);
+			stat = excute(argv);
+			cout << "stat " << stat << endl;
                          numargs = 0;
                          argv[numargs]=strtok(NULL," \t\n");
                  }
-
+		if(strcmp(argv[numargs], "&&") == 0){
+			argv[numargs] = NULL;
+			stat = excute(argv);
+			if(stat != 0) return numargs;
+			numargs = 0;
+			argv[numargs] = strtok(NULL, " \t\n");
+		}
+		if(strcmp(argv[numargs], "||") == 0){
+			argv[numargs] = NULL;
+			stat = excute(argv);
+			if(stat == 0) return numargs;
+			numargs = 0;
+			argv[numargs] = strtok(NULL, " \t\n");
+		}
 		numargs++;
 		argv[numargs] = strtok(NULL," \t\n");
 	}
-	excute(argv);
-	cout << "arguments " << endl;
-	for (int i = 0 ; i < numargs; i ++){
-		cout << argv[i] << endl;
-	}
+	stat = excute(argv);
+//	cout << "stat " << stat << endl;
     	return numargs;
 }
 int main(){
@@ -67,24 +82,15 @@ int main(){
 		cout << "$ ";
 		char input[1024];
 		cin.getline(input,1024);
+		
 		if(!strcmp(input, "exit")) exit(1);
-		/*bool varAnd = false;
-		if(strcmp(input, "&&")) varAnd=true;
-		bool varOr = false;
-		if(strcmp(input, "||")) varOr = true;
-		bool varSem = false;
-		if(strcmp(input, ";")) varSem = true;
-		*/char ** argv;
+		
+		char ** argv;
+		
 		argv = new char *[50];
 
 
-			parse(input, argv);
-		for(j =0; j < i; j++){
-			if(strcmp(argv[j],";")) {
-				excute(argv);
-				delete[] new_argv;
-			}
-		}	
+		parse(input, argv);
 		
 		delete[] argv;
 	}
