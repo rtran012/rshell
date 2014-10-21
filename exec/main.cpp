@@ -36,7 +36,7 @@ int excute(char** argv){
 int parse(char userinput[], char **argv){
 	int stat;   
 	int numargs=0;
-    	unsigned int i = 0; 
+    /*	unsigned int i = 0; 
 	while(i < strlen(userinput)){
 		if(userinput[i] == '#'){
 			userinput[i] = '\0'; 
@@ -44,7 +44,7 @@ int parse(char userinput[], char **argv){
 		}
 		i++;
 	}
-
+*/
 	argv[numargs] = strtok(userinput," \t\n");
 
 	while(argv[numargs] != NULL){
@@ -99,8 +99,20 @@ int main(){
 		char * first, * next;
 		int stat;
 		bool stat1;
+	
 		cin.getline(input,1024);
 		
+		//how to handal comments
+		unsigned int i = 0; 
+		while(i < strlen(input)){
+			if(input[i] == '#'){
+				input[i] = '\0'; 
+				break;
+			}
+			i++;
+		}
+
+
 		if(!strcmp(input, "exit")) exit(1);
 		
 		char ** argv;
@@ -125,19 +137,21 @@ int main(){
 
 		else if(strstr(input,"&&") != NULL){
 			first = input;
+			stat1 = true;
 			next = strstr(first,"&&");
-			while(next != NULL){
+			while(next != NULL && stat1){
 				for(int i =0; i < 1024; i++) buff[i]=0;
 				strncpy(buff,first,next-first);	
 				stat = parse(buff, argv);
-				if(stat != 0) break;
+				if(stat != 0) stat1 = false;
 				first = next+2;
 				next = strstr(first,"&&");
 			}
-
-			for(int i =0; i < 1024; i++) buff[i]=0;	
-			strcpy(buff, first);
-			stat = parse(buff, argv);
+			if(stat1){
+				for(int i =0; i < 1024; i++) buff[i]=0;	
+				strcpy(buff, first);
+				stat = parse(buff, argv);
+			}
 		}
 		else if(strstr(input,"||") != NULL){
 			first = input;
