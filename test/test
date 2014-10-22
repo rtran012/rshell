@@ -1,0 +1,181 @@
+Script started on Tue 21 Oct 2014 03:58:25 PM PDT
+]0;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/execrichard@richard-Inspiron-3531:~/Documents/cs100/hw/exec$ exitg+++ main.cpp ls[Kcd exec/[Khw/;lsDocuments/cs100/;lsalias g+++='g++ -Wall -WWerror -ansi -pedantic'[A]0;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/execrichard@richard-Inspiron-3531:~/Documents/cs100/hw/exec$ exit[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./a.outg+++ main.cppalias g+++='g++ -Wall -WWerror -ansi -pedantic'[A]0;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/execrichard@richard-Inspiron-3531:~/Documents/cs100/hw/exec$ [8Pscript test.log
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[5Pgit branchls[Kcd exec/ls[Kcd hw/[4Plscd cs100/ls[Kcd Documents/ls[Kexitcd ..[3Plspwdexit./a.outg++ -Wall -Werror -ansi  -pedantic main.cpp
+]0;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/execrichard@richard-Inspiron-3531:~/Documents/cs100/hw/exec$ ./a.out
+There was an error in getlogin_r. : No such process
+@richard-Inspiron-3531$ ls
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ pwd
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ ls -a
+.  ..  a.out  LICENSE  main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ ls -a -a l
+total 40
+drwxrwxr-x 2 richard richard  4096 Oct 21 15:59 .
+drwxrwxr-x 5 richard richard  4096 Oct 21 14:05 ..
+-rwxrwxr-x 1 richard richard 14094 Oct 21 15:59 a.out
+-rw-rw-r-- 1 richard richard    97 Oct 18 00:18 LICENSE
+-rw-rw-r-- 1 richard richard  3793 Oct 21 13:52 main.cpp
+-rw-rw-r-- 1 richard richard   423 Oct 21 15:33 README.txt
+-rw-rw-r-- 1 richard richard     0 Oct 21 15:58 test
+-rw-rw-r-- 1 richard richard   691 Oct 21 15:53 test.log
+@richard-Inspiron-3531$ ls -a l
+total 32
+-rwxrwxr-x 1 richard richard 14094 Oct 21 15:59 a.out
+-rw-rw-r-- 1 richard richard    97 Oct 18 00:18 LICENSE
+-rw-rw-r-- 1 richard richard  3793 Oct 21 13:52 main.cpp
+-rw-rw-r-- 1 richard richard   423 Oct 21 15:33 README.txt
+-rw-rw-r-- 1 richard richard     0 Oct 21 15:58 test
+-rw-rw-r-- 1 richard richard   691 Oct 21 15:53 test.log
+@richard-Inspiron-3531$ ls;ls
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ ls ;ls
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ ls; ls
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ ls ; ls
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ pwd&&pwd
+/home/richard/Documents/cs100/hw/exec
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ pwd &&pwd
+/home/richard/Documents/cs100/hw/exec
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ pwd  && pwd
+/home/richard/Documents/cs100/hw/exec
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ ps wd && pwd
+/home/richard/Documents/cs100/hw/exec
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ pwd  ||pwd
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ pwd ||pwd
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ pwd  || pwd
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ pwd || pwd
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ sl
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ sl ;
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ sl;    ;wl  wl  sl
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ sl && sl
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ ls && ls && ls && ls && ls && ls && pwd
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ ls || ls || ls || ls ||sl 
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ sl || sl || sl || sl || ls  pwd
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+/home/richard/Documents/cs100/hw/exec
+@richard-Inspiron-3531$ sl    s; l ;;  sl ; sl ; sl; sl;sl;sl;sl;sl;
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ #testing this is a test
+@richard-Inspiron-3531$ echo testing this is a test
+testing this is a test
+@richard-Inspiron-3531$ echo testing this is a test; echo this is part 2 of test
+testing this is a test
+this is part 2 of test
+@richard-Inspiron-3531$ echo testing this is a test && echo          &&echo this is a test        part 2
+testing this is a test
+this is part 2
+@richard-Inspiron-3531$ echo testing this # is 10
+testing this
+@richard-Inspiron-3531$ echo testing this is # 10 ; echo      pwd
+testing this is
+@richard-Inspiron-3531$ vim m	ain.cpp
+[?1049h[?1h=[2;1H▽[6n[1;1H  [1;1H[1;24r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[23;1H"main.cpp" 178L, 3793C[>c[1;1H[33m  1 [m[35m#include [m[31m<iostream>[m
+[33m  2 [m[35m#include [m[31m<string>[m
+[33m  3 
+  4 [m[35m#include [m[31m<unistd.h>[m
+[33m  5 [m[35m#include [m[31m<sys/types.h>[m
+[33m  6 [m[35m#include [m[31m<sys/wait.h>[m
+[33m  7 [m[35m#include [m[31m<stdlib.h>[m
+[33m  8 [m[35m#include [m[31m<stdio.h>[m
+[33m  9 [m[35m#include [m[31m<errno.h>[m
+[33m 10 [m[35m#include [m[31m<string.h>[m
+[33m 11 
+ 12 using[m [32mnamespace[m std;
+[33m 13 
+ 14 [m[32mint[m excute([32mchar[m** argv){
+[33m 15 
+ 16 [m[8C[32mint[m status;
+[33m 17 [m[8C[32mint[m pid = fork();
+[33m 18 
+ 19 [8Cif[m(pid == -[31m1[m){
+[33m 20 [m[17Cperror([31m"there was an error with fork()."[m);
+[33m 21 [m[9C}
+[1m[7mmain.cpp                                                      1,1            Top]2;main.cpp (~/Documents/cs100/hw/exec) - VIM]1;main.cpp[1;5H[?12l[?25hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[m[23;1H[K[23;1H:[?12l[?25hq[?25l[?12l[?25h[?25l
+]2;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/exec]1;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/exec[23;1H[K[24;1H[?1l>[?12l[?25h[?1049l@richard-Inspiron-3531$ g++ main.cpp
+@richard-Inspiron-3531$ ./a.out
+There was an error in getlogin_r. : No such process
+@richard-Inspiron-3531$ g vim re	a       vim read    Re EADME.txt
+[?1049h[?1h=[2;1H▽[6n[1;1H  [1;1H[1;24r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[23;1H"README.txt" 3L, 423C[>c[1;1H[33m  1 [mThis project is meant to build a simple shell that is able to execute commann[2;1H[33m    [mds found in /bin.  The order of operation that this shell follows is from lee[3;1H[33m    [mft to right.  When a # is detected all inputs after is ignored, ; runs commaa[4;1H[33m    [mnds regardless if the previous command was properly executed, the && runs coo[5;1H[33m    [mmmand only if the left command was successful and || run commands if the leff[6;1H[33m    [mt command was unsuccessful.
+[33m  2 [mKnow Bugs
+[33m  3 [m[8C-
+[1m[34m~                                                                               [10;1H~                                                                               [11;1H~                                                                               [12;1H~                                                                               [13;1H~                                                                               [14;1H~                                                                               [15;1H~                                                                               [16;1H~                                                                               [17;1H~                                                                               [18;1H~                                                                               [19;1H~                                                                               [20;1H~                                                                               [21;1H~                                                                               [m[22;1H[1m[7mREADME.txt                                                    1,1            All]2;README.txt (~/Documents/cs100/hw/exec) - VIM]1;README.txt[1;5H[?12l[?25hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[22;63H2,[7;5H[?12l[?25h[?25l[22;63H3,1-8[8;12H[?12l[?25h[?25l[22;65H2-9 [8;13H[?12l[?25h[?25l[22;65H3-10[8;14H[?12l[?25h[?25l[m[24;1H[1m-- INSERT --[m[22;65H[1m[7m4-11 [8;15H[?12l[?25h[?25l[mw[22;12H[1m[7m[+][50C5-12 ]2;README.txt + (~/Documents/cs100/hw/exec) - VIM]1;README.txt[8;16H[?12l[?25h[?25l[mh[22;65H[1m[7m6-13 [8;17H[?12l[?25h[?25l[me[22;65H[1m[7m7-14 [8;18H[?12l[?25h[?25l[mn[22;65H[1m[7m8-15 [8;19H[?12l[?25h[?25l[22;65H9-16 [8;20H[?12l[?25h[?25l[mr[22;65H[1m[7m10-17[8;21H[?12l[?25h[?25l[mu[22;66H[1m[7m1-18 [8;22H[?12l[?25h[?25l[mn[22;66H[1m[7m2-19 [8;23H[?12l[?25h[?25l[mn[22;66H[1m[7m3-20 [8;24H[?12l[?25h[?25l[mi[22;66H[1m[7m4-21 [8;25H[?12l[?25h[?25l[mn[22;66H[1m[7m5-22 [8;26H[?12l[?25h[?25l[mg[22;66H[1m[7m6-23 [8;27H[?12l[?25h[?25l[22;66H7-24 [8;28H[?12l[?25h[?25l[ms[22;66H[1m[7m8-25 [8;29H[?12l[?25h[?25l[mc[22;66H[1m[7m9-26 [8;30H[?12l[?25h[?25l[mr[22;65H[1m[7m20-27 [8;31H[?12l[?25h[?25l[mi[22;66H[1m[7m1-28 [8;32H[?12l[?25h[?25l[mp[22;66H[1m[7m2-29 [8;33H[?12l[?25h[?25l[mt[22;66H[1m[7m3-30 [8;34H[?12l[?25h[?25l[22;66H4-31 [8;35H[?12l[?25h[?25l[ma[22;66H[1m[7m5-32 [8;36H[?12l[?25h[?25l[mn[22;66H[1m[7m6-33 [8;37H[?12l[?25h[?25l[md[22;66H[1m[7m7-34 [8;38H[?12l[?25h[?25l[22;66H8-35 [8;39H[?12l[?25h[?25l[mt[22;66H[1m[7m9-36 [8;40H[?12l[?25h[?25l[mh[22;65H[1m[7m30-37 [8;41H[?12l[?25h[?25l[me[22;66H[1m[7m1-38 [8;42H[?12l[?25h[?25l[mn[22;66H[1m[7m2-39 [8;43H[?12l[?25h[?25l[22;66H3-40 [8;44H[?12l[?25h[?25l[mr[22;66H[1m[7m4-41 [8;45H[?12l[?25h[?25l[mu[22;66H[1m[7m5-42 [8;46H[?12l[?25h[?25l[mn[22;66H[1m[7m6-43 [8;47H[?12l[?25h[?25l[mn[22;66H[1m[7m7-44 [8;48H[?12l[?25h[?25l[mi[22;66H[1m[7m8-45 [8;49H[?12l[?25h[?25l[mn[22;66H[1m[7m9-46 [8;50H[?12l[?25h[?25l[mg[22;65H[1m[7m40-47 [8;51H[?12l[?25h[?25l[22;66H1-48 [8;52H[?12l[?25h[?25l[mp[22;66H[1m[7m2-49 [8;53H[?12l[?25h[?25l[mr[22;66H[1m[7m3-50 [8;54H[?12l[?25h[?25l[mo[22;66H[1m[7m4-51 [8;55H[?12l[?25h[?25l[mg[22;66H[1m[7m5-52 [8;56H[?12l[?25h[?25l[mr[22;66H[1m[7m6-53 [8;57H[?12l[?25h[?25l[ma[22;66H[1m[7m7-54 [8;58H[?12l[?25h[?25l[mm[22;66H[1m[7m8-55 [8;59H[?12l[?25h[?25l[22;66H9-56 [8;60H[?12l[?25h[?25l[mi[22;65H[1m[7m50-57 [8;61H[?12l[?25h[?25l[ms[22;66H[1m[7m1-58 [8;62H[?12l[?25h[?25l[22;66H2-59 [8;63H[?12l[?25h[?25l[mu[22;66H[1m[7m3-60 [8;64H[?12l[?25h[?25l[mn[22;66H[1m[7m4-61 [8;65H[?12l[?25h[?25l[ma[22;66H[1m[7m5-62 [8;66H[?12l[?25h[?25l[mb[22;66H[1m[7m6-63 [8;67H[?12l[?25h[?25l[ml[22;66H[1m[7m7-64 [8;68H[?12l[?25h[?25l[me[22;66H[1m[7m8-65 [8;69H[?12l[?25h[?25l[22;66H9-66 [8;70H[?12l[?25h[?25l[mt[22;65H[1m[7m60-67 [8;71H[?12l[?25h[?25l[mo[22;66H[1m[7m1-68 [8;72H[?12l[?25h[?25l[22;66H2-69 [8;73H[?12l[?25h[?25l[mr[22;66H[1m[7m3-70 [8;74H[?12l[?25h[?25l[me[22;66H[1m[7m4-71 [8;75H[?12l[?25h[?25l[mt[22;66H[1m[7m5-72 [8;76H[?12l[?25h[?25l[mr[22;66H[1m[7m6-73 [8;77H[?12l[?25h[?25l[me[22;66H[1m[7m7-74 [8;78H[?12l[?25h[?25l[ma[22;66H[1m[7m8-75 [8;79H[?12l[?25h[?25l[mv[22;66H[1m[7m9-76 [8;80H[?12l[?25h[?25l[me[22;65H[1m[7m70-77 [9;5H[?12l[?25h[?25l[m[8;80H[K[22;65H[1m[7m69-76 [8;80H[?12l[?25h[?25l[m[8;79H[K[22;66H[1m[7m8-75 [8;79H[?12l[?25h[?25l[m[8;78H[K[22;66H[1m[7m7-74 [8;78H[?12l[?25h[?25l[m[8;77H[K[22;66H[1m[7m6-73 [8;77H[?12l[?25h[?25l[m[8;76H[K[22;66H[1m[7m5-72 [8;76H[?12l[?25h[?25l[m[8;75H[K[22;66H[1m[7m4-71 [8;75H[?12l[?25h[?25l[m[8;74H[K[22;66H[1m[7m3-70 [8;74H[?12l[?25h[?25l[m[8;73H[K[22;66H[1m[7m2-69 [8;73H[?12l[?25h[?25l[mg[22;66H[1m[7m3-70 [8;74H[?12l[?25h[?25l[me[22;66H[1m[7m4-71 [8;75H[?12l[?25h[?25l[mt[22;66H[1m[7m5-72 [8;76H[?12l[?25h[?25l[22;66H6-73 [8;77H[?12l[?25h[m[24;1H[K[8;76H[?25l[23;1H[K[22;66H[1m[7m5-72 [8;76H[?12l[?25h[?25l[23;1H[m:[?12l[?25hw[?25l[?12l[?25hq[?25l[?12l[?25h[?25l"README.txt" 3L, 485C written
+]2;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/exec]1;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/exec
+[?1l>[?12l[?25h[?1049l@richard-Inspiron-3531$ : exit
+@richard-Inspiron-3531$ echo just exited the rshel in rshel
+just exited the rshel in rshel
+@richard-Inspiron-3531$ #e  #echo ./a.out
+@richard-Inspiron-3531$ ./a.out g++ main.cpp
+There was an error in getlogin_r. : No such process
+@richard-Inspiron-3531$ exit
+@richard-Inspiron-3531$ cd    ls
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ cd ..
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ ls -a; -l
+.  ..  a.out  LICENSE  main.cpp  README.txt  test  test.log
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ ls -a && -l
+.  ..  a.out  LICENSE  main.cpp  README.txt  test  test.log
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ ls -a || -l
+.  ..  a.out  LICENSE  main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ ls && ls    sl || ls     && s       ls && sl || sl && sl
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+a.out  LICENSE	main.cpp  README.txt  test  test.log
+there was an error with execvp.: No such file or directory
+there was an error with execvp.: No such file or directory
+@richard-Inspiron-3531$ ls -a
+.  ..  a.out  LICENSE  main.cpp  README.txt  test  test.log
+@richard-Inspiron-3531$ echo hello
+hello
+@richard-Inspiron-3531$ mkdir test
+mkdir: cannot create directory ‘test’: File exists
+@richard-Inspiron-3531$ ls -a; echo hello; mkdir test
+.  ..  a.out  LICENSE  main.cpp  README.txt  test  test.log
+hello
+mkdir: cannot create directory ‘test’: File exists
+@richard-Inspiron-3531$ exit
+]0;richard@richard-Inspiron-3531: ~/Documents/cs100/hw/execrichard@richard-Inspiron-3531:~/Documents/cs100/hw/exec$ exit
+exit
+
+Script done on Tue 21 Oct 2014 09:44:41 PM PDT
