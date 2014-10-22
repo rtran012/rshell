@@ -15,7 +15,7 @@ int excute(char** argv){
 	
 	int status;
         int pid = fork();
-         
+        
 	if(pid == -1){
                  perror("there was an error with fork().");
          }
@@ -36,15 +36,6 @@ int excute(char** argv){
 int parse(char userinput[], char **argv){
 	int stat;   
 	int numargs=0;
-    /*	unsigned int i = 0; 
-	while(i < strlen(userinput)){
-		if(userinput[i] == '#'){
-			userinput[i] = '\0'; 
-			break;
-		}
-		i++;
-	}
-*/
 	argv[numargs] = strtok(userinput," \t\n");
 
 	while(argv[numargs] != NULL){
@@ -112,13 +103,14 @@ int main(){
 			i++;
 		}
 
-
+		//how to exit program (must be on its own line)
 		if(!strcmp(input, "exit")) exit(1);
 		
 		char ** argv;
 		
 		argv = new char *[50];
 
+		//taking care of ; 
 		if(strstr(input,";") != NULL){
 			first = input;
 			next = strstr(first,";");
@@ -135,6 +127,7 @@ int main(){
 			stat = parse(buff, argv);
 		}
 
+		// taking care of && only after ; is taken care of
 		else if(strstr(input,"&&") != NULL){
 			first = input;
 			stat1 = true;
@@ -153,6 +146,8 @@ int main(){
 				stat = parse(buff, argv);
 			}
 		}
+
+		// takin care of || only after && and ; is taken care of
 		else if(strstr(input,"||") != NULL){
 			first = input;
 			stat1 = true;
@@ -171,6 +166,8 @@ int main(){
 				stat = parse(buff, argv);
 			}
 		}
+		
+		// single argument 
 		else{
 			stat = parse(input,argv);
 		}
