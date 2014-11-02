@@ -1,24 +1,48 @@
 #include <iostream>
-using namespace std;
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
+#include <string>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define FLAG_a 1
-#define FLAG_l 2
-#define FLAG_r 3
-#define FLAG_R 4
+using namespace std;
+
+int aflag = 0;
+int lflag = 0;
+int Rflag = 0;
 
 int main(int argc, char**argv)
 {
-	struct stat statbuf;
-	stat(argc, &
 
-/* find what flags i need
-	then output the desired input
-	in the desired out put create struct and then output desired information
-*/
-
-
+	int index;
+	int c;
+	
+	opterr = 0;
+	
+	while((c = getopt(argc, argv, "alR")) != -1){
+		switch(c){
+			case 'a':
+				aflag = 1;
+				break;
+			case 'l':
+				lflag = 1;
+				break;
+			case 'R':
+				Rflag = 1;
+				break;
+			default:
+				abort();
+		}
+	}
+	
+	cout << "a =" << aflag << endl;
+	cout << "l =" << lflag << endl;
+	cout << "R =" << Rflag << endl;
+	for(index = optind ; index < argc; index++)
+		cout<< index << " Non-option argument " << argv[index] << endl ;	
 	return 0;
 }
