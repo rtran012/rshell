@@ -9,11 +9,8 @@
 
 using namespace std;
 
-void option1(char ** argv) 
+void optionOne(char ** argv) 
 {
-
-
-
 	ifstream in;
 	ofstream out;
 
@@ -31,11 +28,11 @@ void option1(char ** argv)
 	out.close();
 }
 
-void option2(char** argv)
+void optionTwo(char** argv)
 {
   int fd=open(argv[1], O_RDONLY);
   int fd2=open(argv[2],O_RDWR | O_CREAT);
-  fd2 & S_IRUSR & S_IWUSR;
+//  fd2 & S_IRUSR & S_IWUSR;
 
   if (fd == -1) {
     perror("open 1 failed");
@@ -54,14 +51,11 @@ void option2(char** argv)
 
 }
 
-
-
-
-void option3(char** argv)
+void optionThree(char** argv)
 {
   int fd=open(argv[1], O_RDONLY);
   int fd2=open(argv[2],O_RDWR | O_CREAT);
-  fd2 & S_IRUSR & S_IWUSR;
+  //fd2 & S_IRUSR & S_IWUSR;
   
   if (fd == -1) {
     perror("open 1 failed");
@@ -131,9 +125,9 @@ Timer t;
 
      }
 
-     if (argv[3] == 'time') {
+     if (strcmp(argv[3]) == "time") {
 
-cout << "option 1" << endl;
+	cout << "option 1" << endl;
 
         t3.start();
 
@@ -182,6 +176,6 @@ cout << "option 1" << endl;
      }
 //}
 
-	option3(argv);
+//	option3(argv);
 	
 }
