@@ -106,11 +106,34 @@ char *gid_to_name( gid_t gid )
 		return grp_ptr->gr_name;
 }
 
-void print_ls(vector<string> fileList){
+void print_ls(vector<string> fileList, int maxLength){
+
+	int maxLine = 78;
+	unsigned int ncolum, nlines;
+	char format_file[1024];
+	char spaceC[2];
+	strcpy(spaceC, " ");
+	
+	
 	if(lflag == 0){
-		for(unsigned int i = 0 ; i < fileList.size() ; i++){
-			unsigned found = fileList.at(i).find_last_of("/");
-			cout << "fileList : " << fileList.at(i).substr(found+1) << endl;
+		ncolum = ((maxLine-2) / (maxLength+2));
+		if(ncolum == 0) ncolum = 1;
+		nlines = (fileList.size() + ncolum -1) / ncolum ;
+	//	cout << "ncolum= " << ncolum << " nlines= " << nlines << " maxLength= " << maxLength << endl;
+		for(unsigned int i = 0 ; i < nlines ; i++){
+			for(unsigned int k = 0 ; k < ncolum; k++){
+				if(i+nlines*k < fileList.size()){
+					unsigned found = fileList.at(i+nlines*k).find_last_of("/");
+					strcpy(format_file, fileList.at(i+nlines*k).substr(found+1).c_str());
+					printf("%s", format_file);
+					if(k <= ncolum -1){
+						for(unsigned int j = 0; j < maxLength +2 - strlen(format_file); j++)
+							printf("%s", spaceC); 
+					}
+				}
+			}
+			printf("\n");
+				
 		}
 	}
 	else if(lflag == 1){
@@ -138,12 +161,13 @@ void print_ls(vector<string> fileList){
 	}
 		
 }
-void output_ls(char * dirName, vector<string> * fileList ){
+void output_ls(char * dirName, vector<string> * fileList, int * lengthMax ){
 	
+	int ilen;
 	DIR *currPath;
 	struct dirent * currFile;
 	char buffer[1024];
-	
+
 	currPath = opendir(dirName);
 	if(currPath == NULL){
 			perror("opendir: ");
@@ -154,6 +178,8 @@ void output_ls(char * dirName, vector<string> * fileList ){
 				cout << "currFile " << currFile->d_name << endl;
 				sprintf(buffer, "%s/%s", dirName, currFile->d_name);
 				fileList->push_back(buffer);
+				ilen= strlen(currFile->d_name);
+				if(*lengthMax < ilen) *lengthMax= ilen;
 			}
 		}
 		closedir(currPath);
@@ -165,6 +191,7 @@ int main(int argc, char**argv)
 
 	int index;
 	int c;
+	int lnMax;
 	
 	opterr = 0;
 	
@@ -191,19 +218,20 @@ int main(int argc, char**argv)
 		cout<< index << " Non-option argument " << argv[index] << endl ;	
 	//assume at least one argument
 	vector<string> fileList;
+	lnMax = 0;
 	if(optind == argc) {
 		char dir_p[2];
 		strcpy(dir_p, ".");
-		output_ls(dir_p, & fileList);
+		output_ls(dir_p, & fileList, & lnMax);
 	}
 	else {
 		for(index = optind ; index < argc; index++)
-			output_ls(argv[index], & fileList);
+			output_ls(argv[index], & fileList, & lnMax);
 			
 	}
 	sort(fileList.begin(), fileList.end(), compareNoCase);
 
-	print_ls(fileList);
+	print_ls(fileList, lnMax);
 //	for(unsigned int i = 0 ; i < fileList.size() ; i++){
 //		cout << "fileList : " << fileList.at(i) << endl;
 //	} 
