@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctype.h>
+#include <queue>
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
@@ -161,7 +162,7 @@ void print_ls(vector<string> fileList, int maxLength){
 	}
 		
 }
-void output_ls(char * dirName, vector<string> * fileList, int * lengthMax ){
+void output_ls(char * dirName, vector<string> * fileList, int * lengthMax, queue <string> * dirList){
 	
 	int ilen;
 	DIR *currPath;
@@ -175,7 +176,6 @@ void output_ls(char * dirName, vector<string> * fileList, int * lengthMax ){
 	else{
 		while((currFile = readdir(currPath)) != NULL){
 			if(currFile->d_name[0] != '.' || aflag ==1 ){
-				cout << "currFile " << currFile->d_name << endl;
 				sprintf(buffer, "%s/%s", dirName, currFile->d_name);
 				fileList->push_back(buffer);
 				ilen= strlen(currFile->d_name);
@@ -186,13 +186,32 @@ void output_ls(char * dirName, vector<string> * fileList, int * lengthMax ){
 	}
 }
 
+void look_dir(vector<string> fileList, queue <string> * dirList){
+	char buffer[1024];
+	struct stat info_p;
+	
+	
+	for(unsigned int i = 0; i < fileList.size(); i++){
+		if(fileList.at(i).compare(".") != 0 || 
+		   fileList.at(i).compare("..") != 0 ){
+			sprintf(buffer, "%s", fileList.at(i).c_str());
+			if(stat(buffer, &info_p) == -1)
+				perror("stat: ");
+			if(S_ISDIR(info_p.st_mode)){
+				dirList->push(buffer);
+			}
+		}
+	}
+}
+
+
 int main(int argc, char**argv)
 {
 
 	int index;
 	int c;
 	int lnMax;
-	
+		
 	opterr = 0;
 	
 	while((c = getopt(argc, argv, "alR")) != -1){
@@ -211,37 +230,51 @@ int main(int argc, char**argv)
 		}
 	}
 	
-	cout << "a =" << aflag << endl;
-	cout << "l =" << lflag << endl;
-	cout << "R =" << Rflag << endl;
-	for(index = optind ; index < argc; index++)
-		cout<< index << " Non-option argument " << argv[index] << endl ;	
+//	cout << "a =" << aflag << endl;
+//	cout << "l =" << lflag << endl;
+//	cout << "R =" << Rflag << endl;
+//	for(index = optind ; index < argc; index++)
+//		cout<< index << " Non-option argument " << argv[index] << endl ;	
 	//assume at least one argument
 	vector<string> fileList;
+	queue <string> dirList;
 	lnMax = 0;
 	if(optind == argc) {
 		char dir_p[2];
 		strcpy(dir_p, ".");
-		output_ls(dir_p, & fileList, & lnMax);
+		output_ls(dir_p, & fileList, & lnMax, & dirList);
 	}
 	else {
 		for(index = optind ; index < argc; index++)
-			output_ls(argv[index], & fileList, & lnMax);
+			output_ls(argv[index], & fileList, & lnMax, & dirList);
 			
 	}
 	sort(fileList.begin(), fileList.end(), compareNoCase);
-
 	print_ls(fileList, lnMax);
+	
+	if(Rflag == 1){
+		look_dir(fileList, & dirList);
+		while(dirList.size() > 0){
+			char dir_p[1024];
+			strcpy(dir_p, dirList.front().c_str());
+			dirList.pop();
+			lnMax = 0;
+			fileList.clear();
+			output_ls(dir_p, & fileList, &lnMax, & dirList);	
+			sort(fileList.begin(), fileList.end(), compareNoCase);
+			look_dir(fileList, & dirList);
+			cout << endl << dir_p << ":" << endl;
+			print_ls(fileList, lnMax); 
+		}
+	}
+//	cout << "dirList out " << endl;
+//	cout << "dirList size= " << dirList.size() << endl;
+//	for(unsigned int i = 0; i < j; i++){
+//		cout << dirList.front() << endl;
+//		dirList.pop();
+//	}
 //	for(unsigned int i = 0 ; i < fileList.size() ; i++){
 //		cout << "fileList : " << fileList.at(i) << endl;
 //	} 
 	return 0;
 }
-
-
-
-
-
-
-
-
