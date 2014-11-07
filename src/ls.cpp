@@ -106,6 +106,17 @@ char *gid_to_name( gid_t gid )
 	else
 		return grp_ptr->gr_name;
 }
+	
+int get_total(vector<string> fileList){
+	int total = 0;
+	for(unsigned int i =0; i < fileList.size(); i++){
+		struct stat info_p;
+		if(stat(fileList.at(i).c_str() , & info_p) == -1)
+			perror("stat: " );
+		total += (int)info_p.st_blocks;
+	}
+	return (total / 2);
+}
 
 void print_ls(vector<string> fileList, int maxLength){
 
@@ -150,6 +161,7 @@ void print_ls(vector<string> fileList, int maxLength){
 		}
 	}
 	else if(lflag == 1){
+		printf("total %d \n", get_total(fileList));	
 		for(unsigned int i = 0; i < fileList.size(); i ++){
 			struct stat info_p;
 			if(lstat(fileList.at(i).c_str() , &info_p) == -1)
