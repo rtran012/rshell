@@ -245,14 +245,30 @@ int main(int argc, char**argv)
 		output_ls(dir_p, & fileList, & lnMax, & dirList);
 	}
 	else {
-		for(index = optind ; index < argc; index++)
-			output_ls(argv[index], & fileList, & lnMax, & dirList);
+		for(index = optind ; index < argc; index++){
+			char buffer[1024];
+			struct stat info_p;
+			strcpy(buffer, argv[index]);
+			if(stat(buffer, &info_p) == -1) perror("stat: ");
+			if ( S_ISDIR(info_p.st_mode) )  {
+				dirList.push(buffer);
+			}
+			else{
+				int ilen;
+				fileList.push_back(buffer);
+				ilen= strlen(buffer);
+				if(lnMax < ilen) lnMax= ilen;
+			
+	//		output_ls(argv[index], & fileList, & lnMax, & dirList);
+			}
+		}
+		
 			
 	}
 	sort(fileList.begin(), fileList.end(), compareNoCase);
 	print_ls(fileList, lnMax);
 	
-	if(Rflag == 1){
+	if(Rflag == 1 || dirList.size() > 0){
 		look_dir(fileList, & dirList);
 		while(dirList.size() > 0){
 			char dir_p[1024];
