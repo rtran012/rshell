@@ -126,7 +126,19 @@ void print_ls(vector<string> fileList, int maxLength){
 				if(i+nlines*k < fileList.size()){
 					unsigned found = fileList.at(i+nlines*k).find_last_of("/");
 					strcpy(format_file, fileList.at(i+nlines*k).substr(found+1).c_str());
+					
+					struct stat info_p;
+					if(stat(fileList.at(i + nlines * k ).c_str(), &info_p) == -1) 
+						perror("stat: " );
+					if( info_p.st_mode & S_IXUSR || 
+					    info_p.st_mode & S_IXGRP ||
+					    info_p.st_mode & S_IXOTH  ) printf("\x1b[32m");  
+					if( S_ISDIR(info_p.st_mode)) printf("\x1b[34m");
+					if( format_file[0] == '.' ) printf("\x1b[47m");
+
 					printf("%s", format_file);
+					printf("\x1b[0m");
+
 					if(k <= ncolum -1){
 						for(unsigned int j = 0; j < maxLength +2 - strlen(format_file); j++)
 							printf("%s", spaceC); 
@@ -146,6 +158,8 @@ void print_ls(vector<string> fileList, int maxLength){
 			//	char	*uid_to_name(), *ctime(), *gid_to_name(), *filemode();
 			//	void	mode_to_letters();
        		 		char    modestr[11];
+				char    fName[1024];
+				char 	lName[1024];
 
 				mode_to_letters( info_p.st_mode, modestr );
 	
@@ -156,7 +170,24 @@ void print_ls(vector<string> fileList, int maxLength){
 				printf( "%8ld " , (long)info_p.st_size);
 				printf( "%.12s ", 4+ctime(&info_p.st_mtime));
 				unsigned found = fileList.at(i).find_last_of("/");
-				printf( "%s\n"  , fileList.at(i).substr(found+1).c_str());
+				strcpy(fName, fileList.at(i).substr(found+1).c_str());
+				if( info_p.st_mode & S_IXUSR || 
+				    info_p.st_mode & S_IXGRP ||
+				    info_p.st_mode & S_IXOTH  ) printf("\x1b[32m");  
+				if( S_ISDIR(info_p.st_mode)) printf("\x1b[34m");
+				if( fName[0] == '.' ) printf("\x1b[47m");
+				printf( "%s", fName);
+				if( S_ISLNK(info_p.st_mode)){
+					ssize_t istat;
+					strcpy(fName, fileList.at(i).c_str());
+					istat = readlink(fName, lName, info_p.st_size+1);
+					if(istat == -1) perror("readlink: ");
+					lName[istat] = '\0';
+					printf( " -> %s", lName);
+				}
+				printf( "\x1b[0m" );
+				printf( "\n");
+		//		printf( "%s\n"  , fileList.at(i).substr(found+1).c_str());
 			} 
 		}
 	}
@@ -268,7 +299,21 @@ int main(int argc, char**argv)
 	sort(fileList.begin(), fileList.end(), compareNoCase);
 	print_ls(fileList, lnMax);
 	
-	if(Rflag == 1 || dirList.size() > 0){
+	if(dirList.size() > 0 && Rflag == 0) {
+		while(dirList.size() > 0) {
+			char dir_p[1024];
+			strcpy(dir_p, dirList.front().c_str());
+			dirList.pop();
+			lnMax = 0;
+			fileList.clear();
+			output_ls(dir_p, & fileList, &lnMax, & dirList);	
+			sort(fileList.begin(), fileList.end(), compareNoCase);
+	//		look_dir(fileList, & dirList);
+			cout << endl << dir_p << ":" << endl;
+			print_ls(fileList, lnMax); 
+		}
+	}
+	if(Rflag == 1 ){
 		look_dir(fileList, & dirList);
 		while(dirList.size() > 0){
 			char dir_p[1024];
