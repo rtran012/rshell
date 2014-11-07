@@ -219,18 +219,23 @@ void output_ls(char * dirName, vector<string> * fileList, int * lengthMax, queue
 
 void look_dir(vector<string> fileList, queue <string> * dirList){
 	char buffer[1024];
+	char fName[1024];
 	struct stat info_p;
 	
 	
 	for(unsigned int i = 0; i < fileList.size(); i++){
-		if(fileList.at(i).compare(".") != 0 || 
-		   fileList.at(i).compare("..") != 0 ){
-			sprintf(buffer, "%s", fileList.at(i).c_str());
-			if(stat(buffer, &info_p) == -1)
-				perror("stat: ");
-			if(S_ISDIR(info_p.st_mode)){
-				dirList->push(buffer);
-			}
+		unsigned found = fileList.at(i).find_last_of("/");
+		strcpy(fName, fileList.at(i).substr(found+1).c_str());
+
+		sprintf(buffer, "%s", fileList.at(i).c_str());
+		if(stat(buffer, &info_p) == -1)
+			perror("stat: ");
+//		cout << "looking at " << buffer << " fileName " << fName << endl;
+		if(S_ISDIR(info_p.st_mode) && 
+		   !(strcmp(fName, "." ) == 0 || 
+		   strcmp(fName, ".." ) == 0 )) {
+//			cout << "push in " << buffer << endl;
+			dirList->push(buffer);
 		}
 	}
 }
@@ -274,6 +279,9 @@ int main(int argc, char**argv)
 		char dir_p[2];
 		strcpy(dir_p, ".");
 		output_ls(dir_p, & fileList, & lnMax, & dirList);
+//		look_dir(fileList, &dirList);
+//		cout << "size of dirList " << dirList.size() << endl;
+	//	cout << "dirList " << dirList << endl;	
 	}
 	else {
 		for(index = optind ; index < argc; index++){
