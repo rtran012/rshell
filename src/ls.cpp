@@ -26,62 +26,29 @@ int Rflag = 0;
 bool compareNoCase(const string& s1, const string& s2){
 	return strcasecmp( s1.c_str(), s2.c_str()) <= 0;
 }
-/*void lsl(struct dirent currFile, & fileList){
+
+void mode_to_letters( int mode, char str[] ){
+	strcpy( str, "----------" );           /* default=no perms */
+
+	if ( S_ISDIR(mode) )  str[0] = 'd';    /* directory?       */
+	if ( S_ISCHR(mode) )  str[0] = 'c';    /* char devices     */
+	if ( S_ISBLK(mode) )  str[0] = 'b';    /* block device     */
+	if ( S_ISLNK(mode) )  str[0] = 'l';    /* symbolic link    */
 	
-					struct stat buff;
-					int status;
-					status = stat(currFile->d_name , & buff);
-					if(status == -1) perror("stat: ");
-					else{
-						
-						char timeBuff [50];
-						strftime(timeBuff, 50, "%b %d %R", buff.st_mtime);
-						cout << "file type " ;
-						(buff.st_mode & S_IRUSR) ? cout << "r" : cout << "-";
-						(buff.st_mode & S_IWUSR) ? cout << "w" : cout << "-"; 
-						(buff.st_mode & S_IXUSR) ? cout << "x" : cout << "-";
-						(buff.st_mode & S_IRGRP) ? cout << "r" : cout << "-";
-						(buff.st_mode & S_IWGRP) ? cout << "w" : cout << "-";
-						(buff.st_mode & S_IXGRP) ? cout << "x" : cout << "-";
-						(buff.st_mode & S_IROTH) ? cout << "r" : cout << "-";
-						(buff.st_mode & S_IWOTH) ? cout << "w" : cout << "-";
-						(buff.st_mode & S_IXOTH) ? cout << "x" : cout << "-";
-						cout << " " << buff.st_nlink << " " <<
-						buff.st_uid << " " << 
-						buff.st_gid << " " << 
-						buff.st_size << " " << 
-						//buff.st_mtime << " " << 
-						cout << timeBuff << " " << 
-						currFile->d_name <<  endl;
-					}
-	}*/
+	if ( mode & S_IRUSR ) str[1] = 'r';    /* 3 bits for user  */
+	if ( mode & S_IWUSR ) str[2] = 'w';
+	if ( mode & S_IXUSR ) str[3] = 'x';
+	
+	if ( mode & S_IRGRP ) str[4] = 'r';    /* 3 bits for group */
+	if ( mode & S_IWGRP ) str[5] = 'w';
+	if ( mode & S_IXGRP ) str[6] = 'x';
 
-void mode_to_letters( int mode, char str[] )
-{
-    strcpy( str, "----------" );           /* default=no perms */
-
-    if ( S_ISDIR(mode) )  str[0] = 'd';    /* directory?       */
-    if ( S_ISCHR(mode) )  str[0] = 'c';    /* char devices     */
-    if ( S_ISBLK(mode) )  str[0] = 'b';    /* block device     */
-    if ( S_ISLNK(mode) )  str[0] = 'l';    /* symbolic link    */
-
-    if ( mode & S_IRUSR ) str[1] = 'r';    /* 3 bits for user  */
-    if ( mode & S_IWUSR ) str[2] = 'w';
-    if ( mode & S_IXUSR ) str[3] = 'x';
-
-    if ( mode & S_IRGRP ) str[4] = 'r';    /* 3 bits for group */
-    if ( mode & S_IWGRP ) str[5] = 'w';
-    if ( mode & S_IXGRP ) str[6] = 'x';
-
-    if ( mode & S_IROTH ) str[7] = 'r';    /* 3 bits for other */
-    if ( mode & S_IWOTH ) str[8] = 'w';
-    if ( mode & S_IXOTH ) str[9] = 'x';
+	if ( mode & S_IROTH ) str[7] = 'r';    /* 3 bits for other */
+	if ( mode & S_IWOTH ) str[8] = 'w';
+	if ( mode & S_IXOTH ) str[9] = 'x';
 }
 
-
-char *uid_to_name( uid_t uid )
-{
-	//struct	passwd *getpwuid(), *pw_ptr;
+char *uid_to_name( uid_t uid ){
 	struct	passwd *pw_ptr;
 	static  char numstr[10];
 
@@ -94,8 +61,7 @@ char *uid_to_name( uid_t uid )
 }
 
 
-char *gid_to_name( gid_t gid )
-{
+char *gid_to_name( gid_t gid ){
 	struct group *grp_ptr;
 	static  char numstr[10];
 
@@ -131,7 +97,6 @@ void print_ls(vector<string> fileList, int maxLength){
 		ncolum = ((maxLine-2) / (maxLength+2));
 		if(ncolum == 0) ncolum = 1;
 		nlines = (fileList.size() + ncolum -1) / ncolum ;
-	//	cout << "ncolum= " << ncolum << " nlines= " << nlines << " maxLength= " << maxLength << endl;
 		for(unsigned int i = 0 ; i < nlines ; i++){
 			for(unsigned int k = 0 ; k < ncolum; k++){
 				if(i+nlines*k < fileList.size()){
@@ -167,8 +132,6 @@ void print_ls(vector<string> fileList, int maxLength){
 			if(lstat(fileList.at(i).c_str() , &info_p) == -1)
 				perror("stat: ");
 			else{
-			//	char	*uid_to_name(), *ctime(), *gid_to_name(), *filemode();
-			//	void	mode_to_letters();
        		 		char    modestr[11];
 				char    fName[1024];
 				char 	lName[1024];
@@ -199,7 +162,6 @@ void print_ls(vector<string> fileList, int maxLength){
 				}
 				printf( "\x1b[0m" );
 				printf( "\n");
-		//		printf( "%s\n"  , fileList.at(i).substr(found+1).c_str());
 			} 
 		}
 	}
@@ -242,11 +204,9 @@ void look_dir(vector<string> fileList, queue <string> * dirList){
 		sprintf(buffer, "%s", fileList.at(i).c_str());
 		if(stat(buffer, &info_p) == -1)
 			perror("stat: ");
-//		cout << "looking at " << buffer << " fileName " << fName << endl;
 		if(S_ISDIR(info_p.st_mode) && 
 		   !(strcmp(fName, "." ) == 0 || 
 		   strcmp(fName, ".." ) == 0 )) {
-//			cout << "push in " << buffer << endl;
 			dirList->push(buffer);
 		}
 	}
@@ -278,11 +238,6 @@ int main(int argc, char**argv)
 		}
 	}
 	
-//	cout << "a =" << aflag << endl;
-//	cout << "l =" << lflag << endl;
-//	cout << "R =" << Rflag << endl;
-//	for(index = optind ; index < argc; index++)
-//		cout<< index << " Non-option argument " << argv[index] << endl ;	
 	//assume at least one argument
 	vector<string> fileList;
 	queue <string> dirList;
@@ -291,9 +246,6 @@ int main(int argc, char**argv)
 		char dir_p[2];
 		strcpy(dir_p, ".");
 		output_ls(dir_p, & fileList, & lnMax, & dirList);
-//		look_dir(fileList, &dirList);
-//		cout << "size of dirList " << dirList.size() << endl;
-	//	cout << "dirList " << dirList << endl;	
 	}
 	else {
 		for(index = optind ; index < argc; index++){
@@ -348,14 +300,5 @@ int main(int argc, char**argv)
 			print_ls(fileList, lnMax); 
 		}
 	}
-//	cout << "dirList out " << endl;
-//	cout << "dirList size= " << dirList.size() << endl;
-//	for(unsigned int i = 0; i < j; i++){
-//		cout << dirList.front() << endl;
-//		dirList.pop();
-//	}
-//	for(unsigned int i = 0 ; i < fileList.size() ; i++){
-//		cout << "fileList : " << fileList.at(i) << endl;
-//	} 
 	return 0;
 }
