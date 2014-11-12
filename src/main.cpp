@@ -11,163 +11,6 @@
 
 using namespace std;
 
-int gen_cmd( char userinput[], char **argv){
-        int numargs=0;
-        argv[numargs] = strtok(userinput," \t\n");
-        while (argv[numargs] != NULL ){
-             numargs++;
-             argv[numargs] = strtok(NULL, " \t\n");
-        }
-        argv[numargs+1] = NULL;  /* ending by null character */
-        return numargs; 
-}
-
-int parse2(char userinput [], char **argv){
-	char ** cmd;
-	char * next, * first;
-	int ncmd = 0;
-//	cout << "userinput " << userinput << endl;	
-	//
-	cmd = new char *[50];
-	first = userinput;
-	next = strstr(first, "|");
-	cmd[0] = first;
-	ncmd++;
-	while(next != NULL){
-		cmd[ncmd] = next+1;
-		*next = 0 ;
-		first = next +1;
-		next = strstr(first, "|");	
-		ncmd++;
-	}	
-	cout << "ncmd " << ncmd << endl;
-	for(int i = 0; i < ncmd; i++){
-		cout<< i << " cmd[i] " << cmd [i] << endl;
-	}
-
-
-        /* implement the piping function */
-       // int  nargs;
-        int  pid, status;
-        int  icur_pipe;
-        int  *fd;
-        //int  ipipe=0;
-        int  n_ends = 0;
-
-        fd = (int *) malloc( (ncmd-1)*2 * sizeof(int) );
-
-        /* Start the first child */
-        icur_pipe = 0;
-
-        for (int i=0; i < ncmd - 1; i++) {
-            pipe( &fd[i*2] );
-            cout << " Start the pipe number " << icur_pipe << endl;
-        }
-        n_ends = (ncmd - 1)*2;
-
-        switch ( pid = fork() ){
-            case 0: /* child */
-                //dup2( fd[icur_pipe*2+1], 1 );
-                //close( fd[icur_pipe*2] );
-                for ( int i=0; i <  n_ends; i++) {
-                    if ( i == 1 ) { 
-                       dup2 ( fd[i], 1);
-                    } else {
-                       close ( fd[i] );
-                    }
-                }
-                gen_cmd( cmd[icur_pipe], argv);
-                if ( execvp ( argv[0], argv ) == -1 ) {
-                     perror (" cmd[icur_pipe] execvp ");
-                }
-                exit(errno);
-            case -1: 
-                perror("fork");
-                exit(1);
-        }
-
-        cout << "Start the child process " << pid << endl;
-        /* Loop until the last command */
-        for (int j= 1; j < ncmd - 1 ; j++ ){
-            icur_pipe ++;
-            //pipe( &fd[ icur_pipe * 2 ] );
-            cout << " Start the pipe number " << icur_pipe << endl;
-            cout << " Start the command line " << cmd[icur_pipe] << endl;
-
-            switch ( pid = fork() ) {
-                case 0:   /* another child */
-                 //   dup2 ( fd[ (icur_pipe-1) * 2],       0 );
-                 //   //close ( fd[ (icur_pipe-1) * 2 + 1] );
-                 //   dup2 ( fd[ (icur_pipe) * 2 + 1],   1 );
-                    for ( int i = 0 ; i < n_ends; i++) {
-                        if ( i == (j-1)*2 ) {
-                            dup2 ( fd[ (j - 1) * 2 ], 0 );
-                        } else if ( i == j*2 + 1) {
-                            dup2 ( fd[ j * 2 + 1 ], 1 );
-                        } else {
-                           close ( fd[i] );
-                        }
-                    }
-                    gen_cmd( cmd[ icur_pipe], argv);
-                    if ( execvp ( argv[0], argv ) == -1 ) {
-                         perror (" cmd[ipipe] execvp ");
-                    }
-                    exit(errno);
-                case -1:
-                    perror("fork");
-                    exit(1);
-            }
-            cout << "Start the child process " << pid << endl;
-      
-        }
-        /* Start the last child */
-        icur_pipe++;
-        cout << " Start the last command " << cmd[icur_pipe] << endl;
-        switch ( pid = fork() ) {
-            case 0: /* 2nd child */
-                // dup2( fd[(icur_pipe-1) * 2], 0 );
-                // close( fd[(icur_pipe-1) *2 + 1] );  /* this child don't need the other end */
-                for (int i = 0 ; i < n_ends; i++){
-                    if ( i == n_ends - 2 ) {
-                       dup2 ( fd[ n_ends - 2], 0 );
-                    } else {
-                       close ( fd[ i ]);
-                    }
-                }
-                gen_cmd( cmd[ icur_pipe ], argv );
-                if ( execvp ( argv[0], argv ) == -1 ) {
-                     perror ( " cmd[icur_pipe] execvp ");
-                }
-                exit(errno);
-            case -1:
-                perror("fork");
-                exit(1);
-        }
-        cout << "Start the last child process " << pid << endl;
-
-        /* Still parent */
-//       for ( int j = 0; j < ncmd - 1 ; j++ ) {
-//           cout << " close the pipe " << j << endl;
-//           close( fd[j*2]   );
-//           close( fd[j*2+1] );
-//        }
-        cout << "Try to close fd[0] and fd[" << ( ncmd-2)*2+1  << endl;
-
-//        close ( fd[0] );
-//        close ( fd[(ncmd -2 )* 2 +1 ] );
-        for (int i = 0 ; i < n_ends ; i++) {
-            close ( fd[i]);
-        }
-
-        /* wait for all child */
-        cout << "after two close functions, pid= " << pid << endl;
-        while ( ( pid = wait(&status)) != -1 ) 
-             fprintf(stderr, "process %d exists with %d\n", pid, WEXITSTATUS(status));
-      
-      
-        cout << "Just before ending the function parse2 "<< endl;
-	return ncmd;
-}
 int excute(char** argv){
 	
 	int status;
@@ -188,7 +31,173 @@ int excute(char** argv){
 		return status;
          }
 	return status;
- } 
+} 
+
+int gen_cmd( char userinput[], char **argv){
+        int numargs=0;
+        argv[numargs] = strtok(userinput," \t\n");
+        while (argv[numargs] != NULL ){
+             numargs++;
+             argv[numargs] = strtok(NULL, " \t\n");
+        }
+        argv[numargs+1] = NULL;  /* ending by null character */
+        return numargs; 
+}
+
+int parse2(char userinput [], char **argv){
+        //int  istat;
+	char ** cmd;
+	char * first;
+	int ncmd = 0;
+        int icmd;
+
+	cout << "userinput " << userinput << endl;	
+
+        char op_cmd[50];
+
+	cmd = new char *[50];
+
+        //cout << "DEBUG userinput = " << userinput << endl;
+        //cout << " strlen = " << strlen(userinput) << endl;
+        first = userinput;
+        icmd  = 0;
+	int nlen = strlen(userinput);
+        for( int i=0; i < nlen ; i++) {
+            if(strncmp (&userinput[i], "|", 1 ) == 0 ) {
+                 cmd[icmd] = first;
+                 first = &userinput[i+1];
+                 op_cmd[icmd] = '|';
+                 userinput[i] = 0;
+                 icmd++;
+            } else if ( strncmp( &userinput[i], "<", 1 ) == 0 ) {
+                 cmd[icmd] = first;
+                 first = &userinput[i+1];
+                 op_cmd[icmd] = '<';
+                 userinput[i] = 0;
+                 icmd++;
+            } else if ( strncmp( &userinput[i], ">", 1 ) == 0 ) {
+                 cmd[icmd] = first;
+                 first = &userinput[i+1];
+                 op_cmd[icmd] = '>';
+                 userinput[i] = 0;
+                 icmd++;
+            }
+        }
+        cmd[icmd] = first;
+        op_cmd[icmd] = 0;
+	ncmd = icmd;
+	
+
+        cout << "Found there are " << icmd << " operator "<<endl;
+        for (int i=0; i < icmd ; i++){
+           cout << i << " cmd= "<< cmd[i] << endl;
+           cout << "   the operator is " << op_cmd[i] << endl;
+        }
+        cout << icmd  << " cmd= "<< cmd[ icmd] << endl;
+	
+
+    //    if (icmd > 0 ) return ncmd;
+
+/*	first = userinput;
+	next = strstr(first, "|");
+        if ( next == NULL ) {
+
+           gen_cmd( userinput, argv);
+           istat = excute(argv);
+
+        } else {
+
+	cmd[0] = first;
+	ncmd++;
+	while(next != NULL){
+		cmd[ncmd] = next+1;
+		*next = 0 ;
+		first = next +1;
+		next = strstr(first, "|");	
+		ncmd++;
+	}	
+
+	//cout << "ncmd " << ncmd << endl;
+	//for(int i = 0; i < ncmd; i++){
+        //    cout<< i << " cmd[i] " << cmd [i] << endl;
+        //}
+*/
+
+        /* implement the piping function */
+        //int  nargs;
+//        int  pid, status;
+	int pid;
+	int status;
+	int newfd[2];
+//        int  icur_pipe;
+        int  fd[2];
+	if(ncmd == 0){
+		gen_cmd(cmd[0], argv);
+		status = excute(argv);
+		return status;
+	}
+	else{	//taking care of piping
+		pipe(fd);
+		switch( pid = fork()){
+			case 0: 
+				if(strncmp(& op_cmd[0], "|", 1) == 0){
+					dup2( fd[1], 1);
+					close( fd[0] );
+				}
+				gen_cmd(cmd[0], argv);
+				if( execvp( argv[0], argv) == -1) {
+					perror("execvp " );
+				}
+				exit(errno);	
+			case -1:
+				perror("fork ");
+				exit(1);
+		}	
+		for(int j= 1; j < ncmd - 1; j++){
+			pipe(newfd);
+			switch( pid = fork()){
+				case 0:
+					if(strncmp( &op_cmd[j], "|", 1) == 0){
+						dup2( fd[0], 0);
+						close( fd[1] );
+						dup2( newfd[1], 1);
+						close( newfd[0]); 
+					}
+					gen_cmd(cmd[j], argv);
+					if( execvp( argv[0], argv) == -1){
+						perror("execvp " );
+					}
+					exit(errno);
+				case -1:
+					perror("fork ");
+					exit(1);
+			}
+			close( fd[0]);
+			close( fd[1]);
+			fd[0] = newfd[0];
+			fd[1] = newfd[1];
+		}
+		switch( pid = fork()) {
+			case 0:
+				dup2( fd[0], 0);
+				close( fd[1] );
+				gen_cmd(cmd[ncmd], argv);
+				if( execvp(argv[0], argv) == -1){
+					perror("execvp ");
+				}
+				exit(errno);
+			case -1:
+				perror("fork ");
+				exit(1);
+		}
+		close( fd[0] );
+		close( fd[1] );
+		while((pid = wait(&status)) != -1);
+	}
+	if(ncmd == 0)
+		return ncmd;
+	return ncmd;
+}
 
 int parse(char userinput[], char **argv){
 	int stat;   
