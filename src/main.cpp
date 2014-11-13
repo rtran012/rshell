@@ -26,6 +26,7 @@ int gen_cmd( char userinput[], char **argv){
 /* This routine will execute the command with redirection option */
 int scan_cmd_redirect( char userinput[], char **argv) {
 //        int numargs = 0;
+	int append_flag = 0;
         char *filein, *fileout;
         char *curr_pt_in, *curr_pt_out;
         char temp_in[1024];
@@ -46,12 +47,20 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 
         // Search for output redirection information
         fileout = NULL;
-        if ( (curr_pt_out = strstr(userinput,">")) != NULL){
+	if ( (curr_pt_out = strstr(userinput, ">>")) != NULL){
+	    strcpy(temp_out, curr_pt_out+2);
+	    fileout = strtok(temp_out," \n\t><");
+	    if(fileout == NULL){
+		cerr << "Can not find >> in userinput " << userinput << endl;
+	    }
+	    append_flag = 1;
+	}
+        else if ( (curr_pt_out = strstr(userinput,">")) != NULL){
             strcpy(temp_out, curr_pt_out+1);
             fileout = strtok(temp_out," \n\t><");
             if (fileout == NULL) {
     //             numargs = -1;
-                 cout << "Can not fine > in userinput " << userinput << endl;
+                 cerr << "Can not find > in userinput " << userinput << endl;
             }
         }
 
@@ -73,9 +82,13 @@ int scan_cmd_redirect( char userinput[], char **argv) {
         // Open both input/output redirection if exists
         if ( filein != NULL ) 
                 new_stdin = open (filein, O_RDONLY);
-        if ( fileout != NULL )
+        if ( fileout != NULL && append_flag == 0 ){
                 new_stdout = open(fileout, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU|S_IRWXG|S_IRWXO);
-
+	}
+	else if( fileout != NULL && append_flag == 1){
+                new_stdout = open(fileout, O_WRONLY | O_APPEND , S_IRWXU|S_IRWXG|S_IRWXO);
+			
+	}
         // Replacing input redirection
         if ( new_stdin != -1 ) {
                 close ( 0 );
@@ -103,6 +116,7 @@ int parse(char userinput [], char **argv){
 	char * first;
 	int ncmd = 0;
         int icmd;
+	int background_flag;
 
 //	cout << "userinput " << userinput << endl;	
 
@@ -112,6 +126,13 @@ int parse(char userinput [], char **argv){
 
         //cout << "DEBUG userinput = " << userinput << endl;
         //cout << " strlen = " << strlen(userinput) << endl;
+	//sreach for option to execute in background
+	char * cur_pt;
+	background_flag = 0;
+	if((cur_pt = strstr(userinput, "&")) != NULL){
+	    background_flag = 1;
+	    *cur_pt = ' ';
+	}
 
         first = userinput;
         icmd  = 0;
@@ -146,6 +167,8 @@ int parse(char userinput [], char **argv){
 	int status;
 	int newfd[2];
         int  fd[2];
+	status = 0;
+
 	if(ncmd == 0){
 
                 pid = fork ();
@@ -156,11 +179,16 @@ int parse(char userinput [], char **argv){
                       if ( execvp ( argv[0], argv ) == -1 ) 
                                   perror ("there was an error with execvp." );
                       exit(errno);
-                } else if ( pid > 0 ) {
-                      wait( &status );
-                      return status;
+                } else if ( pid > 0) {
+		      if(background_flag == 0){
+                      	  wait( &status );
+                          return status;
+		      }
+		      else{
+			  return 0;
+		      }
                 }
-                return status;
+            //    return 0;
                        
 	}
 	else{	//taking care of piping
@@ -218,7 +246,13 @@ int parse(char userinput [], char **argv){
 		}
 		close( fd[0] );
 		close( fd[1] );
-		while((pid = wait(&status)) != -1);
+		if(background_flag == 0){
+			while((pid = wait(&status)) != -1);
+			return status;
+		}
+		else{
+			return 0;
+		}
 	}
 
 	return status;
