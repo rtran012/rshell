@@ -12,6 +12,10 @@
 
 using namespace std;
 
+int is_digit(char *ptr){
+	return (*ptr >= '0' && *ptr <= '9' );
+}
+
 int gen_cmd( char userinput[], char **argv){
         int numargs=0;
         argv[numargs] = strtok(userinput," \t\n");
@@ -27,6 +31,8 @@ int gen_cmd( char userinput[], char **argv){
 int scan_cmd_redirect( char userinput[], char **argv) {
 //        int numargs = 0;
 	int append_flag = 0;
+	int ichan_in = 0;
+	int ichan_out = 1;
         char *filein, *fileout;
         char *curr_pt_in, *curr_pt_out;
         char temp_in[1024];
@@ -43,6 +49,13 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 //                  numargs = -1;
                   cout << "Can not find <  in userinput " << userinput << endl;
             }
+	     if ( is_digit(curr_pt_in - 1)){
+		  char value[2];
+		  strncpy(value, curr_pt_in - 1, 1);
+		  value[1] = 0;
+		  ichan_in = atoi(value);
+		  *(curr_pt_in -1) = ' ';
+	     }
         } 
 
         // Search for output redirection information
@@ -54,6 +67,13 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 		cerr << "Can not find >> in userinput " << userinput << endl;
 	    }
 	    append_flag = 1;
+	    if ( is_digit(curr_pt_out - 1)){
+		  char value[2];
+		  strncpy(value, curr_pt_out - 1, 1);
+		  value[1] = 0;
+		  ichan_out = atoi(value);
+		  *(curr_pt_out -1) = ' ';
+	     }
 	}
         else if ( (curr_pt_out = strstr(userinput,">")) != NULL){
             strcpy(temp_out, curr_pt_out+1);
@@ -62,6 +82,13 @@ int scan_cmd_redirect( char userinput[], char **argv) {
     //             numargs = -1;
                  cerr << "Can not find > in userinput " << userinput << endl;
             }
+	    if ( is_digit(curr_pt_out - 1)){
+		  char value[2];
+		  strncpy(value, curr_pt_out - 1, 1);
+		  value[1] = 0;
+		  ichan_out = atoi(value);
+		  *(curr_pt_out -1) = ' ';
+	     }
         }
 
 
@@ -91,17 +118,25 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 	}
         // Replacing input redirection
         if ( new_stdin != -1 ) {
-                close ( 0 );
+                close ( ichan_in );
                 dup( new_stdin );
-                close ( new_stdin );
+              //  close ( new_stdin );
         }
 
         // Replacing output redirection
         if ( new_stdout != -1 ) {
-                close ( 1 );
+                close ( ichan_out );
                 dup ( new_stdout );
-                close ( new_stdout );
+               // close ( new_stdout );
         }
+
+	if( new_stdin > 2){
+		close (new_stdin);
+	}
+	
+	if( new_stdout > 2){
+		close (new_stdout);
+	}
 
         int nargs;
         //int i;
