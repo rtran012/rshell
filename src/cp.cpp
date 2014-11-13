@@ -14,7 +14,7 @@ using namespace std;
 
 void method1(char **args)
 {
-  cout << "Method 1" << endl;
+  cout << "Method 1:" << endl;
   Timer t;
   double etime;
   t.start();
@@ -42,7 +42,7 @@ void method1(char **args)
 }
 void method2(char ** args)
 {
-  cout << "Method 2" << endl;
+  cout << "Method 2:" << endl;
   Timer t;
   double etime;
   t.start();
@@ -80,7 +80,7 @@ void method2(char ** args)
 }
 void method3(char ** args)
 {
-  cout << "Method 3" << endl;
+  cout << "Method 3:" << endl;
   Timer t;
   double etime;
   t.start();
