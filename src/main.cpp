@@ -30,13 +30,15 @@ int gen_cmd( char userinput[], char **argv){
 /* This routine will execute the command with redirection option */
 int scan_cmd_redirect( char userinput[], char **argv) {
 //        int numargs = 0;
-	int append_flag = 0;
+	int append_flag[10];
 	int ichan_in = 0;
-	int ichan_out = 1;
-        char *filein, *fileout;
+	int ichan_out[10];
+	int nchan_out = 0;
+        char *filein;// *fileout;
         char *curr_pt_in, *curr_pt_out;
         char temp_in[1024];
         char temp_out[1024];
+	char *file_out[10];
 
         //cout << " Input: userinput = " << userinput << endl;
 
@@ -58,37 +60,42 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 	     }
         } 
 
-        // Search for output redirection information
-        fileout = NULL;
-	if ( (curr_pt_out = strstr(userinput, ">>")) != NULL){
-	    strcpy(temp_out, curr_pt_out+2);
-	    fileout = strtok(temp_out," \n\t><");
-	    if(fileout == NULL){
-		cerr << "Can not find >> in userinput " << userinput << endl;
-	    }
-	    append_flag = 1;
-	    if ( is_digit(curr_pt_out - 1)){
-		  char value[2];
-		  strncpy(value, curr_pt_out - 1, 1);
-		  value[1] = 0;
-		  ichan_out = atoi(value);
-		  *(curr_pt_out -1) = ' ';
-	     }
-	}
-        else if ( (curr_pt_out = strstr(userinput,">")) != NULL){
-            strcpy(temp_out, curr_pt_out+1);
-            fileout = strtok(temp_out," \n\t><");
-            if (fileout == NULL) {
-    //             numargs = -1;
-                 cerr << "Can not find > in userinput " << userinput << endl;
-            }
-	    if ( is_digit(curr_pt_out - 1)){
-		  char value[2];
-		  strncpy(value, curr_pt_out - 1, 1);
-		  value[1] = 0;
-		  ichan_out = atoi(value);
-		  *(curr_pt_out -1) = ' ';
-	     }
+        // Search for output redirection information up to 10 redirection
+	char *buffer;	
+	buffer = userinput;
+	nchan_out = 0;
+	for(int i = 0; i < 10; i++){
+		append_flag[nchan_out] = 0;
+		ichan_out[nchan_out] = 1;
+        	file_out[nchan_out] = NULL;
+		if ( (curr_pt_out = strstr(buffer, ">")) != NULL){
+	   		if((*(curr_pt_out + 1 ) == '>')){
+				strcpy(temp_out, curr_pt_out+2);
+	    			append_flag[nchan_out] = 1;
+				*curr_pt_out = 0;
+				cerr<< "found >> " ;
+	   		}
+	   		else{
+	        		strcpy(temp_out, curr_pt_out+1);
+				buffer = curr_pt_out + 1;
+				cerr << "found > ";
+		   	}
+			*curr_pt_out = 0;
+	   		file_out[nchan_out] = strtok(temp_out," \n\t><");
+	   		if(file_out[nchan_out] == NULL){
+				cerr << "Can not find >> in userinput " << userinput << endl;
+	   		}
+			cerr << " file = " << file_out[nchan_out];
+	   		if ( is_digit(curr_pt_out - 1)){
+		 	 	char value[2];
+		  		strncpy(value, curr_pt_out - 1, 1);
+		  		value[1] = 0;
+		  		ichan_out[nchan_out] = atoi(value);
+		  		*(curr_pt_out -1) = ' ';
+				cerr << " fd num " << ichan_out[nchan_out] << endl;
+	   		}
+			nchan_out++;
+		}
         }
 
 
@@ -101,21 +108,21 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 
 
 //        int status;
-        int new_stdin, new_stdout;
+        int new_stdin;
+	int new_stdout[10];
 
         new_stdin = -1; 
-        new_stdout = -1;
 
         // Open both input/output redirection if exists
         if ( filein != NULL ) 
                 new_stdin = open (filein, O_RDONLY);
-        if ( fileout != NULL && append_flag == 0 ){
-                new_stdout = open(fileout, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU|S_IRWXG|S_IRWXO);
-	}
-	else if( fileout != NULL && append_flag == 1){
-                new_stdout = open(fileout, O_WRONLY | O_APPEND , S_IRWXU|S_IRWXG|S_IRWXO);
-			
-	}
+        //if ( fileout != NULL && append_flag == 0 ){
+       //         new_stdout = open(fileout, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU|S_IRWXG|S_IRWXO);
+	//}
+//	else if( fileout != NULL && append_flag == 1){
+//			
+  //              new_stdout = open(fileout, O_WRONLY | O_APPEND , S_IRWXU|S_IRWXG|S_IRWXO);
+//	}
         // Replacing input redirection
         if ( new_stdin != -1 ) {
                 close ( ichan_in );
@@ -124,20 +131,42 @@ int scan_cmd_redirect( char userinput[], char **argv) {
         }
 
         // Replacing output redirection
-        if ( new_stdout != -1 ) {
+/*        if ( new_stdout != -1 ) {
                 close ( ichan_out );
                 dup ( new_stdout );
                // close ( new_stdout );
         }
-
+*/
 	if( new_stdin > 2){
 		close (new_stdin);
 	}
 	
-	if( new_stdout > 2){
+/*	if( new_stdout > 2){
 		close (new_stdout);
 	}
-
+*/
+	for(int i =0; i < nchan_out; i++ ){
+		if(append_flag[i] == 0){
+                	new_stdout[i] = open(file_out[i], O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU|S_IRWXG|S_IRWXO);
+		}
+		else if(append_flag[i] == 1){
+                	new_stdout[i] = open(file_out[i], O_WRONLY | O_APPEND , S_IRWXU|S_IRWXG|S_IRWXO);
+		}
+		cerr << " i = " << i << " file " << file_out[i] << " new_stdout " << new_stdout[i] << endl;
+	}
+	for(int i = 0; i < nchan_out; i++ ){
+		if( new_stdout[i] != -1){
+			close( ichan_out[i]);
+			dup( new_stdout[i]);
+		//	close( new_stdout[i]);
+		}
+	}
+	for(int i = 0; i < nchan_out; i++){
+		if( new_stdout[i] > 2 ){
+			close(new_stdout[i]);
+		}
+	}
+	
         int nargs;
         //int i;
         nargs = gen_cmd(userinput, argv);
