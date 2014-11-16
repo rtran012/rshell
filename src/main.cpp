@@ -38,14 +38,25 @@ int scan_cmd_redirect( char userinput[], char **argv) {
         char temp_in[1024];
         char temp_out[1024];
 	char file_out[1024];
-
+	char dmsg[1024];
+	char c_endline[2];
+	int got_msg =0;
+	
         // Search for output/input redirection information up to 10 redirection
 	char *buffer;	
 	buffer = userinput;
 	for(int i = 0; i < 10; i++){
 		append_flag = 0;
 		ichan_out = 1;
-        	if ( (curr_pt_in = strstr(buffer,"<")) != NULL ) {
+		if ( (curr_pt_in = strstr(buffer, "<<<")) != NULL){
+			char *istart, *ilast;
+			istart = strstr(curr_pt_in +3 , "\"" );
+			ilast = strstr(istart +1, "\"");
+			strncpy(dmsg, istart+1, ilast-istart-1);
+			dmsg[ilast-istart-1] = 0;
+			got_msg = 1;
+		}
+        	else if ( (curr_pt_in = strstr(buffer,"<")) != NULL ) {
 			filein = NULL; 
         	     	strcpy(temp_in, curr_pt_in+1);
              		filein = strtok(temp_in," \n\t><");
@@ -121,7 +132,24 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 		if ( curr_pt_in  != NULL ) *curr_pt_in  = 0;
         	if ( curr_pt_out != NULL ) *curr_pt_out = 0;
         }
-
+	
+	if(got_msg == 1){
+		int fd[2];
+		pipe(fd);
+		int nval;
+		nval = write(fd[1], dmsg, strlen(dmsg));
+		if(nval < 0)
+			perror("write dmsg: ");	
+		strcpy(c_endline, "\n");
+		c_endline[1] = 0 ;
+		nval = write(fd[1], c_endline, strlen(c_endline));
+		if(nval < 0)
+			perror("write endline: ");
+		
+		dup2(fd[0], 0);
+		close(fd[1]);
+	}
+	
         int nargs;
         nargs = gen_cmd(userinput, argv);
 
