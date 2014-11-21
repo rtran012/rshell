@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -29,7 +28,7 @@ int gen_cmd( char userinput[], char **argv){
 
 /* This routine will execute the command with redirection option */
 int scan_cmd_redirect( char userinput[], char **argv) {
-//        int numargs = 0;
+
 	int append_flag;
 	int ichan_in = 0;
 	int ichan_out;
@@ -61,7 +60,6 @@ int scan_cmd_redirect( char userinput[], char **argv) {
         	     	strcpy(temp_in, curr_pt_in+1);
              		filein = strtok(temp_in," \n\t><");
              		if ( filein == NULL ) {
-//             		     	numargs = -1;
                 	  	cout << "Can not find <  in userinput " << userinput << endl;
             		}
 	     		if ( is_digit(curr_pt_in - 1)){
@@ -77,12 +75,12 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 
         		// Open both input/output redirection if exists
         		if ( filein != NULL ) 
-                		new_stdin = open (filein, O_RDONLY);
+                		if((new_stdin = open (filein, O_RDONLY)) == -1) perror("open78");
 
         		// Replacing input redirection
         		if ( new_stdin != -1 ) {
                 		close ( ichan_in );
-                		dup( new_stdin );
+                		if((dup( new_stdin )) == -1) perror("dup83");
               			close ( new_stdin );
         		}
         	}
@@ -116,15 +114,15 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 			int new_stdout;
 			
 			if(append_flag == 0){
-                		new_stdout = open(file_out, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU|S_IRWXG|S_IRWXO);
+                		if((new_stdout = open(file_out, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU|S_IRWXG|S_IRWXO)) == -1) perror("open");
 			}
 			else if(append_flag == 1){
-                		new_stdout = open(file_out, O_WRONLY | O_CREAT | O_APPEND , S_IRWXU|S_IRWXG|S_IRWXO);
+                		if((new_stdout = open(file_out, O_WRONLY | O_CREAT | O_APPEND , S_IRWXU|S_IRWXG|S_IRWXO)) == -1) perror("open");
 			}
 		//	cerr << " i = " << i << " file " << file_out[i] << " new_stdout " << new_stdout[i] << endl;
 			if( new_stdout != -1){
 				close( ichan_out);
-				dup( new_stdout);
+				if((dup( new_stdout)) == -1) perror("dup");
 				close(new_stdout);
 			}
 
@@ -135,7 +133,7 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 	
 	if(got_msg == 1){
 		int fd[2];
-		pipe(fd);
+		if((pipe(fd)) == -1)perror("pipe");
 		int nval;
 		nval = write(fd[1], dmsg, strlen(dmsg));
 		if(nval < 0)
@@ -146,7 +144,7 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 		if(nval < 0)
 			perror("write endline: ");
 		
-		dup2(fd[0], 0);
+		if((dup2(fd[0], 0)) == -1) perror("dup2");
 		close(fd[1]);
 	}
 	
@@ -157,21 +155,15 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 }
 
 int parse(char userinput [], char **argv){
-        //int  istat;
+	
 	char ** cmd;
 	char * first;
 	int ncmd = 0;
         int icmd;
 	int background_flag;
 
-//	cout << "userinput " << userinput << endl;	
-
-        //char op_cmd[50];
-
 	cmd = new char *[50];
 
-        //cout << "DEBUG userinput = " << userinput << endl;
-        //cout << " strlen = " << strlen(userinput) << endl;
 	//sreach for option to execute in background
 	char * cur_pt;
 	background_flag = 0;
@@ -187,26 +179,12 @@ int parse(char userinput [], char **argv){
             if(strncmp (&userinput[i], "|", 1 ) == 0 ) {
                  cmd[icmd] = first;
                  first = &userinput[i+1];
-        //         op_cmd[icmd] = '|';
                  userinput[i] = 0;
                  icmd++;
             }
         }
         cmd[icmd] = first;
-     //   op_cmd[icmd] = 0;
 	ncmd = icmd;
-	
-
-        //cout << "Found there are " << ncmd << " operator "<<endl;
-        //for (int i=0; i < ncmd ; i++){
-        //   cout << i << " cmd= "<< cmd[i] << endl;
-        //   cout << "   the operator is " << op_cmd[i] << endl;
-        //}
-        //cout << icmd  << " cmd= "<< cmd[ ncmd] << endl;
-	
-
-    //    if (icmd > 0 ) return ncmd;
-
 
         /* implement the piping function */
 	int pid;
@@ -223,11 +201,11 @@ int parse(char userinput [], char **argv){
                 } else if ( pid == 0 ) {
                       scan_cmd_redirect ( cmd[0], argv );
                       if ( execvp ( argv[0], argv ) == -1 ) 
-                                  perror ("there was an error with execvp." );
+                                  perror("there was an error with execvp." );
                       exit(errno);
                 } else if ( pid > 0) {
 		      if(background_flag == 0){
-                      	  wait( &status );
+                      	  if((wait( &status )) == -1) perror("wait");
                           return status;
 		      }
 		      else{
@@ -238,35 +216,35 @@ int parse(char userinput [], char **argv){
                        
 	}
 	else{	//taking care of piping
-		pipe(fd);
+		if((pipe(fd)) == -1) perror("pipe");
 		switch( pid = fork()){
 			case 0: 
                                 scan_cmd_redirect ( cmd[0], argv );
 
-				dup2( fd[1], 1);
+				if((dup2( fd[1], 1)) == -1) perror("dup2");
 				close( fd[0] );
 
-                                if ( execvp ( argv[0], argv ) == -1 )
-                                      perror ( "execvp ");
-                                exit ( errno );
+                                if ( execvp( argv[0], argv ) == -1 )
+                                      perror( "execvp ");
+                                exit( errno );
 			case -1:
 				perror("fork ");
 				exit(1);
 		}	
 		for(int j= 1; j < ncmd ; j++){
-			pipe(newfd);
+			if((pipe(newfd)) == -1) perror("pipe");
 			switch( pid = fork()){
 				case 0:
-                                        scan_cmd_redirect ( cmd[j], argv );
+                                        scan_cmd_redirect( cmd[j], argv );
 
-					dup2( fd[0], 0);
+					if((dup2( fd[0], 0)) == -1) perror("dup2");
 					close( fd[1] );
-					dup2( newfd[1], 1);
+					if((dup2( newfd[1], 1)) == -1) perror("dup2");
 					close( newfd[0]); 
 
-                                        if ( execvp ( argv[0], argv ) == -1 )
-                                              perror ( "exevp ");
-                                        exit ( errno );
+                                        if ( execvp( argv[0], argv ) == -1 )
+                                              perror( "exevp ");
+                                        exit( errno );
 				case -1:
 					perror("fork ");
 					exit(1);
@@ -280,7 +258,7 @@ int parse(char userinput [], char **argv){
 			case 0:
                                 scan_cmd_redirect ( cmd[ncmd], argv );
 
-				dup2( fd[0], 0);
+				if((dup2( fd[0], 0)) == -1) perror("dup2");
 				close( fd[1] );
 
                                 if ( execvp ( argv[0], argv ) == -1 )
@@ -293,7 +271,8 @@ int parse(char userinput [], char **argv){
 		close( fd[0] );
 		close( fd[1] );
 		if(background_flag == 0){
-			while((pid = wait(&status)) != -1);
+			while((pid = wait(&status)) != -1)
+				if(pid == -1) perror("wait");
 			return status;
 		}
 		else{
@@ -325,7 +304,7 @@ int main(){
 		char input[1024];
 		char buff[1024];
 		char * first, * next;
-		int stat;
+		int mystat;
 		bool stat1;
 	
 		cin.getline(input,1024);
@@ -354,14 +333,14 @@ int main(){
 			while(next != NULL){
 				for(int i =0; i < 1024; i++) buff[i]=0;
 				strncpy(buff,first,next-first);	
-				stat = parse(buff, argv);
+				mystat = parse(buff, argv);
 				first = next + 1;
 				next = strstr(first,";");
 			}
 
 			for(int i =0; i < 1024; i++) buff[i]=0;	
 			strcpy(buff, first);
-			stat = parse(buff, argv);
+			mystat = parse(buff, argv);
 		}
 
 		// taking care of && only after ; is taken care of
@@ -372,15 +351,15 @@ int main(){
 			while(next != NULL && stat1){
 				for(int i =0; i < 1024; i++) buff[i]=0;
 				strncpy(buff,first,next-first);	
-				stat = parse(buff, argv);
-				if(stat != 0) stat1 = false;
+				mystat = parse(buff, argv);
+				if(mystat != 0) stat1 = false;
 				first = next+2;
 				next = strstr(first,"&&");
 			}
 			if(stat1){
 				for(int i =0; i < 1024; i++) buff[i]=0;	
 				strcpy(buff, first);
-				stat = parse(buff, argv);
+				mystat = parse(buff, argv);
 			}
 		}
 
@@ -392,21 +371,21 @@ int main(){
 			while(next != NULL && stat1){
 				for(int i =0; i < 1024; i++) buff[i]=0;
 				strncpy(buff,first,next-first);	
-				stat = parse(buff, argv);
-				if(stat == 0) stat1 = false;
+				mystat = parse(buff, argv);
+				if(mystat == 0) stat1 = false;
 				first = next+2;
 				next = strstr(first,"||");
 			}
 			if(stat1){
 				for(int i =0; i < 1024; i++) buff[i]=0;	
 				strcpy(buff, first);
-				stat = parse(buff, argv);
+				mystat = parse(buff, argv);
 			}
 		}
 		
 		// single argument 
 		else{
-			stat = parse(input,argv);
+			mystat = parse(input,argv);
 		}
 		
 		delete[] argv;
