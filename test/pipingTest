@@ -1,0 +1,137 @@
+Script started on Thu 20 Nov 2014 10:49:14 PM PST
+]0;richard@richard-Inspiron-3531: ~/Documents/rshell/testrichard@richard-Inspiron-3531:~/Documents/rshell/test$ cdo[K ..
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ ls
+[0m[01;34mbin[0m  LICENSE  Makefile  [01;32moutput[0m  README  [01;34msrc[0m  [01;34mtest[0m
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ make r[K[K[K[K[K[Krm output
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ make rshell 
+echo "test"
+test
+mkdir -p bin
+g++ -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ bin/rshell 
+There was an error in getlogin_r. : No such process
+@richard-Inspiron-3531$ #this is my rshell
+@richard-Inspiron-3531$ ls
+bin  LICENSE  Makefile	README	src  test
+@richard-Inspiron-3531$ echo hello > output
+@richard-Inspiron-3531$ cat output
+hello
+@richard-Inspiron-3531$ cat <<  < output
+hello
+@richard-Inspiron-3531$ echo hi >> output
+@richard-Inspiron-3531$ echo      cat  output
+hello
+hi
+@richard-Inspiron-3531$ echo how are you >> output
+@richard-Inspiron-3531$ cat output
+hello
+hi
+how are you
+@richard-Inspiron-3531$ ls  |wc
+      7       7      44
+@richard-Inspiron-3531$ ls |wc 0 -l
+7
+@richard-Inspiron-3531$ ls _ | gr     | grep bin
+bin
+@richard-Inspiron-3531$ ls | grep E
+LICENSE
+README
+@richard-Inspiron-3531$ ls | grep e E \ | grep R
+README
+@richard-Inspiron-3531$ cat < m Makefile | grep all
+all: rshell ls cp
+	g++ -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
+	g++ -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
+	g++ -Wall -Werror -ansi -pedantic src/ls.cpp -o bin/ls
+	g++ -Wall -Werror -ansi -pedantic src/cp.cpp -o bin/cp
+@richard-Inspiron-3531$ ls
+bin  LICENSE  Makefile	output	README	src  test
+@richard-Inspiron-3531$ echo this is a TEST! > input
+@richard-Inspiron-3531$ echo hope      Hope this works !   WELL < >> input
+@richard-Inspiron-3531$ cat input
+this is a TEST!
+Hope this works WELL
+@richard-Inspiron-3531$ cat input | tr A-Z a-z | tee newO OutputFile1 | tr a-z A-Z > new  out   OutP putFile2 &
+@richard-Inspiron-3531$ cat newOutputFile1
+@richard-Inspiron-3531$ this is a test!
+hope this works well
+f cat new Ou   OutputFile1 2
+@richard-Inspiron-3531$ THIS IS A TEST!
+HOPE THIS WORKS WELL
+cat ou      cat ou      ls
+@richard-Inspiron-3531$ bin    LICENSE	 newOutputFile1  output  src
+input  Makefile  newOutputFile2  README  test
+ls -l |gre    grep Nov > test 1  1
+@richard-Inspiron-3531$ ls  cat test 1  1
+drwxrwxr-x 2 richard richard 4096 Nov 20 22:49 bin
+-rwxrwxr-x 1 richard richard   37 Nov 20 22:52 input
+-rw-rw-r-- 1 richard richard  404 Nov 11 22:43 Makefile
+-rw-rw-r-- 1 richard richard   37 Nov 20 22:53 newOutputFile1
+-rwxrwxr-x 1 richard richard   37 Nov 20 22:53 newOutputFile2
+-rwxrwxr-x 1 richard richard   21 Nov 20 22:50 output
+drwxrwxr-x 4 richard richard 4096 Nov 20 19:15 src
+drwxrwxr-x 2 richard richard 4096 Nov 20 22:49 test
+-rwxrwxr-x 1 richard richard    0 Nov 20 22:55 test1
+@richard-Inspiron-3531$ m ls -l | grep Nov >test1      test1; ls -l grep Nov | grep 20 >> test1
+ls: cannot access grep: No such file or directory
+ls: cannot access Nov: No such file or directory
+@richard-Inspiron-3531$ ls -l | grep Nov > test1; ls -l                                 #there was a typo up above 
+@richard-Inspiron-3531$ ls -l | grep nov   Nov > test! 1; ls -l | grep Nov | grep 20 >> test  1
+@richard-Inspiron-3531$ cat test1
+drwxrwxr-x 2 richard richard 4096 Nov 20 22:49 bin
+-rwxrwxr-x 1 richard richard   37 Nov 20 22:52 input
+-rw-rw-r-- 1 richard richard  404 Nov 11 22:43 Makefile
+-rw-rw-r-- 1 richard richard   37 Nov 20 22:53 newOutputFile1
+-rwxrwxr-x 1 richard richard   37 Nov 20 22:53 newOutputFile2
+-rwxrwxr-x 1 richard richard   21 Nov 20 22:50 output
+drwxrwxr-x 4 richard richard 4096 Nov 20 19:15 src
+drwxrwxr-x 2 richard richard 4096 Nov 20 22:49 test
+-rwxrwxr-x 1 richard richard    0 Nov 20 22:57 test1
+drwxrwxr-x 2 richard richard 4096 Nov 20 22:49 bin
+-rwxrwxr-x 1 richard richard   37 Nov 20 22:52 input
+-rw-rw-r-- 1 richard richard   37 Nov 20 22:53 newOutputFile1
+-rwxrwxr-x 1 richard richard   37 Nov 20 22:53 newOutputFile2
+-rwxrwxr-x 1 richard richard   21 Nov 20 22:50 output
+drwxrwxr-x 4 richard richard 4096 Nov 20 19:15 src
+drwxrwxr-x 2 richard richard 4096 Nov 20 22:49 test
+-rwxrwxr-x 1 richard richard  494 Nov 20 22:57 test1
+@richard-Inspiron-3531$ ls README pokemon       sam   Sams    samsung
+ls: cannot access samsung: No such file or directory
+README
+@richard-Inspiron-3531$ ls README samfs  sung 2> errors
+README
+@richard-Inspiron-3531$ cat errors
+ls: cannot access samsung: No such file or directory
+@richard-Inspiron-3531$ ls ca    README samsung p 1>ou   output
+ls: cannot access samsung: No such file or directory
+@richard-Inspiron-3531$ cat output
+README
+@richard-Inspiron-3531$ cat README pokemon1          samsung 1>> output 2>> errors
+@richard-Inspiron-3531$ cat output
+README
+This project is meant to build a simple shell that is able to execute commands found in /bin.  The order of operation that this shell follows is from left to right.  When a # is detected all inputs after is ignored, ; runs command regardless if the previous command(s) was properly executed, the && runs command only if the left command(s) was successful and || run command if the left command(s) was unsuccessful. 
+Know Bugs
+	- when running script and then the rshell, the rshell program is unable to get login_r
+	- shell is unable to move directory
+@richard-Inspiron-3531$ @ #another typo for the last two lines meant to say
+@richard-Inspiron-3531$ ls README samsung 1>>  o  output 2> w errors
+@richard-Inspiron-3531$ ls    cat output
+README
+@richard-Inspiron-3531$ cat errors
+ls: cannot access samsung: No such file or directory
+@richard-Inspiron-3531$ ls README samsung 1>> output 2>> errors
+@richard-Inspiron-3531$ cat output
+README
+README
+@richard-Inspiron-3531$ cat errors
+ls: cannot access samsung: No such file or directory
+ls: cannot access samsung: No such file or directory
+@richard-Inspiron-3531$ cat <<< "extra credit rocks"
+extra credit rocks
+@richard-Inspiron-3531$ cat   echo extra bredit rocks |cat
+extra bredit rocks
+@richard-Inspiron-3531$ exit
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ exit
+exit
+
+Script done on Thu 20 Nov 2014 11:03:01 PM PST
