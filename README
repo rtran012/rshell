@@ -1,4 +1,7 @@
-This project is meant to build a simple shell that is able to execute commands found in /bin.  The order of operation that this shell follows is from left to right.  When a # is detected all inputs after is ignored, ; runs command regardless if the previous command(s) was properly executed, the && runs command only if the left command(s) was successful and || run command if the left command(s) was unsuccessful. 
+This project is meant to build a simple shell that is able to execute commands.  The order of operation that this shell follows is from left to right.  When a # is detected all inputs after is ignored, ; runs command regardless if the previous command(s) was properly executed, the && runs command only if the left command(s) was successful and || run command if the left command(s) was unsuccessful. 
+Update* piping was added to this project.  the symbol '<' '>' '>>' '|' '<<<' and output redirection on whatever file descriptor number.  
 Know Bugs
 	- when running script and then the rshell, the rshell program is unable to get login_r
 	- shell is unable to move directory
+	- at random points when running the prompt line will be sent to output
+	
