@@ -1,0 +1,37 @@
+Script started on Fri 05 Dec 2014 11:23:03 PM PST
+]0;richard@richard-Inspiron-3531: ~/Documents/rshell/testrichard@richard-Inspiron-3531:~/Documents/rshell/test$ ls[K[Kcd ..[K[K[K .. 
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ make rshell 
+echo "test"
+test
+mkdir -p bin
+g++ -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ bin/rshell
+There was an error in getlogin_r. : No such process
+@richard-Inspiron-3531$ ls
+bin  LICENSE  Makefile	README	src  test
+@richard-Inspiron-3531$ pwd
+/home/richard/Documents/rshell
+@richard-Inspiron-3531$ ls ^C pwd
+/home/richard/Documents/rshell
+@richard-Inspiron-3531$ ^Cpw   pwd
+/home/richard/Documents/rshell
+@richard-Inspiron-3531$ ls ^C
+@richard-Inspiron-3531$ pwd ^C
+@richard-Inspiron-3531$ ^Z
+[1]+  Stopped                 bin/rshell
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ bg
+[1]+ bin/rshell &
+
+[1]+  Stopped                 bin/rshell
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ fg
+bin/rshell
+
+@richard-Inspiron-3531$ ls
+bin  LICENSE  Makefile	README	src  test
+@richard-Inspiron-3531$ pwd
+/home/richard/Documents/rshell
+@richard-Inspiron-3531$ exit
+]0;richard@richard-Inspiron-3531: ~/Documents/rshellrichard@richard-Inspiron-3531:~/Documents/rshell$ exit
+exit
+
+Script done on Fri 05 Dec 2014 11:24:52 PM PST
