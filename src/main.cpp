@@ -8,8 +8,28 @@
 #include <errno.h>
 #include <string.h>
 #include <fcntl.h>
+#include <signal.h>
 
 using namespace std;
+
+void printC(int sig){
+	if(signal(SIGINT, SIG_IGN) == SIG_ERR){
+		perror("signal failed");
+		exit(1);
+	}
+}
+
+void printZ(int sig){
+	if(signal(SIGTSTP, SIG_DFL) == SIG_ERR){
+		perror("signal CTRL-Z with SIG_DFL");
+		exit(1);
+	}
+	if(kill(getpid(), SIGTSTP) == -1){
+		perror("signal: kill failed");
+	//	cout << sig << endl;
+		exit(1);
+	}
+}
 
 int is_digit(char *ptr){
 	return (*ptr >= '0' && *ptr <= '9' );
@@ -79,9 +99,9 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 
         		// Replacing input redirection
         		if ( new_stdin != -1 ) {
-                		close ( ichan_in );
+                		if((close ( ichan_in )) == -1) perror("close");
                 		if((dup( new_stdin )) == -1) perror("dup83");
-              			close ( new_stdin );
+              			if((close ( new_stdin )) == -1) perror("close");
         		}
         	}
 
@@ -121,9 +141,9 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 			}
 		//	cerr << " i = " << i << " file " << file_out[i] << " new_stdout " << new_stdout[i] << endl;
 			if( new_stdout != -1){
-				close( ichan_out);
+				if((close( ichan_out)) == -1) perror("close") ;
 				if((dup( new_stdout)) == -1) perror("dup");
-				close(new_stdout);
+				if((close(new_stdout)) == -1) perror("close");
 			}
 
 		}
@@ -145,7 +165,7 @@ int scan_cmd_redirect( char userinput[], char **argv) {
 			perror("write endline: ");
 		
 		if((dup2(fd[0], 0)) == -1) perror("dup2");
-		close(fd[1]);
+		if((close(fd[1])) == -1) perror("close");
 	}
 	
         int nargs;
@@ -222,7 +242,7 @@ int parse(char userinput [], char **argv){
                                 scan_cmd_redirect ( cmd[0], argv );
 
 				if((dup2( fd[1], 1)) == -1) perror("dup2");
-				close( fd[0] );
+				if((close( fd[0] )) == -1) perror("close");
 
                                 if ( execvp( argv[0], argv ) == -1 )
                                       perror( "execvp ");
@@ -238,9 +258,9 @@ int parse(char userinput [], char **argv){
                                         scan_cmd_redirect( cmd[j], argv );
 
 					if((dup2( fd[0], 0)) == -1) perror("dup2");
-					close( fd[1] );
+					if((close( fd[1] )) == -1) perror("close");
 					if((dup2( newfd[1], 1)) == -1) perror("dup2");
-					close( newfd[0]); 
+					if((close( newfd[0])) == -1) perror("close"); 
 
                                         if ( execvp( argv[0], argv ) == -1 )
                                               perror( "exevp ");
@@ -249,8 +269,8 @@ int parse(char userinput [], char **argv){
 					perror("fork ");
 					exit(1);
 			}
-			close( fd[0]);
-			close( fd[1]);
+			if((close( fd[0])) == -1) perror("close");
+			if((close( fd[1])) == -1) perror("close");
 			fd[0] = newfd[0];
 			fd[1] = newfd[1];
 		}
@@ -259,17 +279,17 @@ int parse(char userinput [], char **argv){
                                 scan_cmd_redirect ( cmd[ncmd], argv );
 
 				if((dup2( fd[0], 0)) == -1) perror("dup2");
-				close( fd[1] );
+				if((close( fd[1] )) == -1) perror("close");
 
                                 if ( execvp ( argv[0], argv ) == -1 )
-                                      perror ( "exevp ");
+                                      perror( "exevp ");
                                 exit ( errno );
 			case -1:
 				perror("fork ");
 				exit(1);
 		}
-		close( fd[0] );
-		close( fd[1] );
+		if((close( fd[0] )) == -1) perror("close");
+		if((close( fd[1] )) == -1) perror("close");
 		if(background_flag == 0){
 			while((pid = wait(&status)) != -1)
 				if(pid == -1) perror("wait");
@@ -284,6 +304,15 @@ int parse(char userinput [], char **argv){
 }
 
 int main(){
+
+	if(signal(SIGINT, printC) == SIG_ERR){
+		perror("signal CTRL-C");
+		exit(1);
+	}
+	if(signal(SIGTSTP, printZ) == SIG_ERR){
+		perror("signal CTRL-Z");
+		exit(1);
+	}
 	char username[100] = {0};
 	char hostname[100] = {0};
 
